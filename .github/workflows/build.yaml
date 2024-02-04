@@ -22,9 +22,11 @@ jobs:
         with:
           submodules: recursive
 
-      - name: esp-idf build monitor
-        uses: espressif/esp-idf-ci-action@main
-        with:
-          esp_idf_version: ${{ matrix.idf_ver }}
-          target: ${{ matrix.idf_target }}
-          path: "examples/loconet-monitor"
+      - name: Build for ${{ matrix.idf_target }}
+        env:
+            IDF_TARGET: ${{ matrix.idf_target }}
+        shell: bash
+        working-directory: examples/loconet-monitor
+        run: |
+          . ${IDF_PATH}/export.sh
+          idf.py build
