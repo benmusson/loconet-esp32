@@ -1,9 +1,9 @@
 version: "0.0.1"
-description: This component is an example, to be used with the IDF component manager.
-url: https://github.com/espressif/example_components/tree/main/cmp
-issues: https://github.com/espressif/example_components/issues
-repository: https://github.com/espressif/example_components.git
-license: MIT
+description: LocoNet library for ESP-32
+url: https://github.com/benmusson/loconet-esp32
+issues: https://github.com/benmusson/loconet-esp32/issues
+repository: https://github.com/benmusson/loconet-esp32.git
+license: GPL
 dependencies:
   idf: ">=5.1"
 examples:
