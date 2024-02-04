@@ -15,21 +15,17 @@ jobs:
       matrix:
         idf_ver: ["release-v5.1", "latest"]
         idf_target: ["esp32"]
-        include:
-
-          - idf_ver: "release-v5.1"
-            idf_target: esp32c2
     runs-on: ubuntu-22.04
     container: espressif/idf:${{ matrix.idf_ver }}
     steps:
       - uses: actions/checkout@v1
         with:
           submodules: recursive
-      - name: Build for ${{ matrix.idf_target }}
-        env:
-          IDF_TARGET: ${{ matrix.idf_target }}
-        shell: bash
-        working-directory: example
-        run: |
-          . ${IDF_PATH}/export.sh
-          idf.py build
+
+      - name: esp-idf build library
+        uses: espressif/esp-idf-ci-action@main
+        with:
+          esp_idf_version: ${{ matrix.idf_ver }}
+          target: ${{ matrix.idf_target }}
+          path: "examples/"
+          command: apt-get update && apt-get install -y python3-venv && idf.py build
