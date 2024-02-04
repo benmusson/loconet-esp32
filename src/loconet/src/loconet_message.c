@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "esp_log.h"
-
 #include "loconet.h"
 #include "loconet_message.h"
 
@@ -58,6 +56,7 @@ char *loconet_opcode_to_string(uint8_t opcode) {
     };
 }
 
+
 LocoNetMessageLongAck loconet_message_long_ack_deserialize(const LocoNetMessageRaw *raw) {
     return (LocoNetMessageLongAck) {
         .opcode = raw->data[1] | 0b10000000,
@@ -76,6 +75,7 @@ LocoNetMessageRaw loconet_message_long_ack_serialize(const LocoNetMessageLongAck
 
     return raw;
 }
+
 
 LocoNetMessageLocoSpeed loconet_message_loco_speed_deserialize(const LocoNetMessageRaw *raw) {
     return (LocoNetMessageLocoSpeed) {
@@ -96,9 +96,10 @@ LocoNetMessageRaw loconet_message_loco_speed_serialize(const LocoNetMessageLocoS
     return raw;
 }
 
+
 LocoNetMessageSwitchRequest loconet_message_switch_request_deserialize(const LocoNetMessageRaw *raw) {
     return (LocoNetMessageSwitchRequest) {
-        .address = (raw->data[1] & LOCONET_MASK_SW_ADDRESS_LSB) + ((raw->data[2] & LOCONET_MASK_SW_ADDRESS_MSB) << 7) + 1,
+        .address = (raw->data[1] & LOCONET_MASK_ADDRESS_LSB) + ((raw->data[2] & LOCONET_MASK_ADDRESS_MSB) << 7) + 1,
         .output = (raw->data[2] & LOCONET_MASK_SW_OUTPUT) ? LOCONET_SWITCH_OUTPUT_ON : LOCONET_SWITCH_OUTPUT_OFF,
         .direction = (raw->data[2] & LOCONET_MASK_SW_DIRECTION) ? LOCONET_SWITCH_OUTPUT_ON : LOCONET_SWITCH_OUTPUT_OFF,
     };
@@ -108,31 +109,56 @@ LocoNetMessageRaw loconet_message_switch_request_serialize(const LocoNetMessageS
     LocoNetMessageRaw raw = loconet_message_raw_start();
 
     loconet_message_raw_add(&raw, LOCONET_OPC_SW_REQ);
-    loconet_message_raw_add(&raw, (message->address - 1) & LOCONET_MASK_SW_ADDRESS_LSB);
+    loconet_message_raw_add(&raw, (message->address - 1) & LOCONET_MASK_ADDRESS_LSB);
 
     const uint8_t output = message->output ? LOCONET_MASK_SW_OUTPUT : 0;
     const uint8_t direction = message->direction ? LOCONET_MASK_SW_DIRECTION : 0;
-    loconet_message_raw_add(&raw, (((message->address- 1) >> 7) & LOCONET_MASK_SW_ADDRESS_MSB) | output | direction);
+    loconet_message_raw_add(&raw, (((message->address- 1) >> 7) & LOCONET_MASK_ADDRESS_MSB) | output | direction);
     loconet_message_raw_add(&raw, raw.checksum);
     loconet_message_raw_end(&raw);
 
     return raw;
 }
 
+
 LocoNetMessageSwitchStateRequest loconet_message_switch_state_request_deserialize(const LocoNetMessageRaw *raw) {
     return (LocoNetMessageSwitchStateRequest) {
-        .address = (raw->data[1] & LOCONET_MASK_SW_ADDRESS_LSB) + ((raw->data[2] & LOCONET_MASK_SW_ADDRESS_MSB) << 7) + 1,
+        .address = (raw->data[1] & LOCONET_MASK_ADDRESS_LSB) + ((raw->data[2] & LOCONET_MASK_ADDRESS_MSB) << 7) + 1,
     };
 }
+
 LocoNetMessageRaw loconet_message_switch_state_request_serialize(const LocoNetMessageSwitchStateRequest *message) {
     LocoNetMessageRaw raw = loconet_message_raw_start();
 
     loconet_message_raw_add(&raw, LOCONET_OPC_SW_REQ);
-    loconet_message_raw_add(&raw, (message->address - 1) & LOCONET_MASK_SW_ADDRESS_LSB);
-    loconet_message_raw_add(&raw, ((message->address- 1) >> 7) & LOCONET_MASK_SW_ADDRESS_MSB);
+    loconet_message_raw_add(&raw, (message->address - 1) & LOCONET_MASK_ADDRESS_LSB);
+    loconet_message_raw_add(&raw, ((message->address- 1) >> 7) & LOCONET_MASK_ADDRESS_MSB);
     loconet_message_raw_add(&raw, raw.checksum);
     loconet_message_raw_end(&raw);
 
     return raw;
+}
 
+
+LocoNetMessageInputReport loconet_message_input_report_deserialize(const LocoNetMessageRaw *raw) {
+    return (LocoNetMessageInputReport) {
+        .address = (raw->data[1] & LOCONET_MASK_ADDRESS_LSB) + ((raw->data[2] & LOCONET_MASK_ADDRESS_MSB) << 7) + 1,
+        .source = (raw->data[2] & LOCONET_MASK_INPUT_SOURCE) ? LOCONET_INPUT_SOURCE_AUX : LOCONET_INPUT_SOURCE_SWITCH,
+        .state = (raw->data[2] & LOCONET_MASK_INPUT_STATE) ? LOCONET_INPUT_STATE_ON : LOCONET_INPUT_STATE_OFF,
+    };
+}
+
+LocoNetMessageRaw loconet_message_input_report_serialize(const LocoNetMessageInputReport *message) {
+   LocoNetMessageRaw raw = loconet_message_raw_start();
+
+    loconet_message_raw_add(&raw, LOCONET_OPC_INPUT_REP);
+    loconet_message_raw_add(&raw, (message->address - 1) & LOCONET_MASK_ADDRESS_LSB);
+
+    const uint8_t source = message->source ? LOCONET_MASK_INPUT_SOURCE : 0;
+    const uint8_t state = message->state ? LOCONET_MASK_INPUT_STATE : 0;
+    loconet_message_raw_add(&raw, (((message->address- 1) >> 7) & LOCONET_MASK_ADDRESS_MSB) | source | state);
+    loconet_message_raw_add(&raw, raw.checksum);
+    loconet_message_raw_end(&raw);
+
+    return raw;
 }

@@ -14,5 +14,9 @@
     "idf.flashType": "UART",
     "cSpell.words": [
         "loconet"
+    ],
+    "idf.openOcdConfigs": [
+        "interface/ftdi/esp32_devkitj_v1.cfg",
+        "target/esp32.cfg"
     ]
 }

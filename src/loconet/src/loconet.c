@@ -5,6 +5,7 @@
 typedef struct LocoNetInterface {
     LocoNetMessageCallback read_callback;
     LocoNetMessageCallback write_callback;
+    LocoNetMessageSendImpl send;
 } LocoNetInterface ;
 
 LocoNetInterfaceHandle loconet_interface_new(void) {
@@ -16,6 +17,10 @@ LocoNetInterfaceHandle loconet_interface_new(void) {
 
 void loconet_interface_delete(LocoNetInterfaceHandle handle) {
     free(handle);
+}
+
+void loconet_message_send(LocoNetInterfaceHandle handle, LocoNetMessageRaw *message) {
+    handle->send(handle, message);
 }
 
 void loconet_interface_register_cb_read(LocoNetInterfaceHandle handle, const LocoNetMessageCallback cb) {

@@ -16,10 +16,12 @@
 #define LOCONET_UART_QUEUE_SIZE 20
 
 static const char *TAG = "loconet_uart_events";
+void loconet_uart_message_send(LocoNetUartInterfaceHandle handle, LocoNetMessageRaw *message);
 
 typedef struct LocoNetUartInterface {
     LocoNetMessageCallback read_callback;
     LocoNetMessageCallback write_callback;
+    LocoNetMessageSendImpl send;
     LocoNetUartConfig uart_config;
     QueueHandle_t uart_queue;
     TaskHandle_t task_handle;
@@ -39,6 +41,7 @@ LocoNetUartInterfaceHandle loconet_uart_handle_new(LocoNetUartConfig *uart_confi
 
     (*handle).uart_config = *uart_config;
     (*handle).uart_queue = NULL;
+    (*handle).send = (LocoNetMessageSendImpl)loconet_uart_message_send;
 
     return handle;
 }

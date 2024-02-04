@@ -1,4 +1,4 @@
 cmake_minimum_required (VERSION 3.5)
-project(loconet)
+project(loconet C)
 
-file(GLOB SOURCES src/*.c)
+add_subdirectory(src)

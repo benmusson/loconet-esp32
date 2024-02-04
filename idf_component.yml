@@ -6,3 +6,5 @@ repository: https://github.com/espressif/example_components.git
 license: MIT
 dependencies:
   idf: ">=5.1"
+examples:
+  - path: ./examples
