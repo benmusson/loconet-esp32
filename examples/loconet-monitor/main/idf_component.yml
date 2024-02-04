@@ -1,5 +1,0 @@
-dependencies:
-  idf: ">=5.1"
-  bmusson/loconet-esp32:
-    version: "*"
-    override_path: "../../../"
