@@ -1,0 +1,8 @@
+version: "0.0.1"
+description: This component is an example, to be used with the IDF component manager.
+url: https://github.com/espressif/example_components/tree/main/cmp
+issues: https://github.com/espressif/example_components/issues
+repository: https://github.com/espressif/example_components.git
+license: MIT
+dependencies:
+  idf: ">=5.1"

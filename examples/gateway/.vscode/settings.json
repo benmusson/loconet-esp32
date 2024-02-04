@@ -1,0 +1,9 @@
+{
+    "idf.adapterTargetName": "esp32",
+    "files.associations": {
+        "gateway.h": "c",
+        "led_indicator.h": "c"
+    },
+    "idf.flashType": "UART",
+    "idf.portWin": "COM3"
+}
