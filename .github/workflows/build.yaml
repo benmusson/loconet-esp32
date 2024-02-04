@@ -22,10 +22,9 @@ jobs:
         with:
           submodules: recursive
 
-      - name: esp-idf build library
+      - name: esp-idf build monitor
         uses: espressif/esp-idf-ci-action@main
         with:
           esp_idf_version: ${{ matrix.idf_ver }}
           target: ${{ matrix.idf_target }}
-          path: "examples/"
-          command: apt-get update && apt-get install -y python3-venv && idf.py build
+          path: "examples/loconet-monitor"
