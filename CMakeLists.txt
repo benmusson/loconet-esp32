@@ -1,18 +1,6 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.16)
 
-set(SOURCES
-        "src/loconet/src/loconet.c"
-        "src/loconet/src/loconet_message.c"
-        "src/loconet_esp32.c"
-        )
+include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 
-set(INCLUDES
-        "src/loconet/src"
-        "src"
-)
-
-idf_component_register(
-    SRCS ${SOURCES}
-    INCLUDE_DIRS ${INCLUDES}
-    REQUIRES driver
-)
+idf_build_set_property(MINIMAL_BUILD ON)
+project(m18_bms_esp32)
