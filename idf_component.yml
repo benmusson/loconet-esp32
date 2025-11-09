@@ -1,0 +1,8 @@
+version: "0.0.2"
+description: LocoNet library for ESP-32
+url: https://github.com/benmusson/loconet-esp32
+issues: https://github.com/benmusson/loconet-esp32/issues
+repository: https://github.com/benmusson/loconet-esp32.git
+license: GPL
+dependencies:
+  idf: ">=5.1"
